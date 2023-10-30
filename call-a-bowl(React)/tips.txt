@@ -1,0 +1,10 @@
+npx generate-react-cli component Signup
+
+
+
+                  const categoryContainer = (
+                    <article key={categoryName} className="menu_main_cont" data-id={categoryName}>
+                      {createTitleHeader(categoryName)}
+                      {category[categoryName].map((menuItem) => createMenuItemFromApi(menuItem, categoryName))}
+                    </article>
+                  );

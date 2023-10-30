@@ -1,0 +1,312 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+function AdminPage({ isAuthenticated ,token}) {
+  const navigate = useNavigate();
+  const [editResponse, seteditResponse] = useState('');
+  const [response, setresponse] = useState('');
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+
+
+  const [editMenuItem, seteditMenuItem] = useState({
+    prevMENU: '',
+    prevCATEGORY: '',
+    MENU: '',
+    PRICE: 0,
+    IMAGE: null,
+    showimage:'',
+    CATEGORY: 'SOUP',
+    overlay:false,
+  });
+  // Handle logout and token invalidation
+  const [isLoading, setIsLoading] = useState(true);
+ 
+  const handleInputChange = (event) => {
+    const { name, value, type, files } = event.target;
+  
+    if (type === 'file') {
+      const newValue = files[0];
+      const reader = new FileReader();
+  
+      reader.onload = (e) => {
+        seteditMenuItem({
+          ...editMenuItem,
+          [name]: newValue,
+          showimage: e.target.result,
+        });
+      };
+  
+      reader.readAsDataURL(newValue);
+    } else {
+      seteditMenuItem({ ...editMenuItem, [name]: value });
+    }
+  };
+  
+  
+  useEffect(() => {
+    localStorage.setItem('token', JSON.stringify(token));
+  },[token])
+  
+  const [jsonData, setJsonData] = useState({}); // State to store JSON data
+
+  const fetchData = async () => {
+    try {
+      const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
+      const response = await fetch('/api/products');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (cachedData && JSON.stringify(data.newItem) === cachedData) {
+        // Data is the same as cached data, no need to update stat
+        
+
+        setJsonData(JSON.parse(cachedData));
+        setIsLoading(false);
+      } else {
+        // Data is different or not cached, update state and cache
+        localStorage.setItem('jsonData', JSON.stringify(data.newItem));
+
+        
+        setJsonData(data.newItem);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      
+      setresponse(error)
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // useEffect to trigger fetchData when the component mounts
+
+  if (isLoading) {
+    // Render loading indicator while waiting for data
+    return <div className='custom-loader_div'>
+
+<div className="custom-loader"></div>
+</div>;
+  }
+
+  function handleDelete(itemName,CATEGORY) {
+    try{
+    
+
+    const deleteUrl = '/api/product/delete'
+
+      const postData = {
+        itemName ,CATEGORY
+      } 
+      axios.post(deleteUrl, postData)
+      .then(function (response) {
+        
+        setresponse( response.data)
+        window.location.reload();
+      }).catch(function (error) {
+        // Handle any errors that occurred during the request
+        
+        setresponse(error)
+      })
+
+    }catch(e){
+      setresponse('Error processing',e)
+     
+    }
+  }
+
+
+  function clickOnEdit(MENU,PRICE,CATEGORY,IMAGE) {
+    seteditMenuItem(prevState => ({
+      ...prevState,
+      prevMENU: MENU, 
+      prevCATEGORY: CATEGORY,
+      MENU,
+      PRICE,
+      CATEGORY,
+      overlay:true,
+      showimage:IMAGE ? `data:image/png;base64,${IMAGE}` : '',
+    }));
+    
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoadingSubmit(true);
+    const formData = new FormData();
+    
+       formData.append('prevMENU', editMenuItem.prevMENU)
+       formData.append('prevCATEGORY', editMenuItem.prevCATEGORY)
+       formData.append('MENU', editMenuItem.MENU)
+       formData.append('CATEGORY', editMenuItem.CATEGORY)
+       formData.append('PRICE', parseInt(editMenuItem.PRICE, 10))
+       formData.append('IMAGE', editMenuItem.IMAGE)
+    
+       try {
+        const response = await fetch('/api/product/edit', {
+          method: 'POST',
+          body: formData,
+        });
+    
+        if (response.ok) {
+          const responseData = await response.json(); // Parse the JSON response
+    
+          // Handle success, e.g., show a success message and access the details
+          console.log(responseData.message);
+          seteditResponse(responseData.message);
+          
+          window.location.reload();
+          
+        } else {
+          // Handle errors, e.g., show an error message
+          seteditResponse('Error adding item:', response.statusText)
+          console.error('Error adding item:', response.statusText);
+        }
+      } catch (error) {
+        // Handle network errors
+        
+        seteditResponse('Network error:', error);
+      }
+    
+      
+    
+      
+      setIsLoadingSubmit(false);
+      // Reset the editMenuItem state
+      seteditMenuItem({
+        prevMENU: '',
+        prevCATEGORY: '',
+        MENU: '',
+        PRICE: 0,
+        IMAGE: null,
+        showimage:'',
+        CATEGORY: 'SOUP',
+        overlay: false,
+      });
+  };
+  function  deleteImg() {
+    seteditMenuItem((prev) => ({
+      ...prev,
+      IMAGE: ''
+    })
+    )
+
+  }
+
+  function closeEditOverlay() {
+    seteditMenuItem({
+      prevMENU: '',
+      prevCATEGORY: '',
+      MENU: '',
+      PRICE: 0,
+      IMAGE: null,
+      showimage:'',
+      CATEGORY: 'SOUP',
+      overlay: false,
+    });
+  }
+  
+  return (
+    <div>
+      {response? response: ''}
+<h2>MENU Table</h2>
+<div className={`cart_overlay ${editMenuItem.overlay ? 'open-modal': '' }`}>
+<div className="cart_overlay_container">
+<div>
+      <form encType="multipart/form-data" method="post" onSubmit={handleSubmit}>
+
+      <br/>
+        <div style={{color:'green'}}>{editResponse? editResponse : ''}</div>
+        {
+          isLoadingSubmit?
+          
+  <div className="custom-loader"></div>
+
+:
+''
+        }
+        <br/>
+        <br/>
+        <input
+          type="text"
+          name="MENU"
+          placeholder="Menu Item"
+          value={editMenuItem.MENU}
+          onChange={handleInputChange}
+        />
+        <input
+          type="number"
+          name="PRICE"
+          placeholder="Price"
+          value={editMenuItem.PRICE}
+          onChange={handleInputChange}
+        />
+        <br/>
+        
+        <img src={editMenuItem.showimage} alt={`${editMenuItem.showimage ? 'item_img' : 'no_img'}`} className='-' />
+        <input
+          type="file"
+          name="IMAGE"
+          accept="image/*"
+          onChange={handleInputChange}
+        />
+       
+        <br />
+         <label className="label">Category</label>
+              <select className="input" 
+               name="CATEGORY"
+          placeholder="Category"
+          value={editMenuItem.CATEGORY}
+          onChange={handleInputChange}
+              >
+                <option value="SOUP">SOUP</option>
+                <option value="RICE MEALS">RICE MEALS</option>
+                <option value="YAM & PLANTAIN">YAM & PLANTAIN</option>
+                <option value="PASTA & NOODLES">PASTA & NOODLES</option>
+                <option value="BEANS">BEANS</option>
+                <option value="SMALLCHOPS & GRILLS">SMALLCHOPS & GRILLS</option>
+                <option value="LUNCHPACK">LUNCHPACK</option>
+                <option value="EXTRAS">EXTRAS</option>
+                <option value="DRINKS">DRINKS</option>
+                <option value="SWALLOW">SWALLOW</option>
+                <option value="SOUP">SOUP</option>
+              </select>
+        <button type="submit">Submit</button>
+        <div  onClick={closeEditOverlay}>cancel</div>
+      </form>
+    </div>
+      </div>
+      </div>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Categories</th>
+      <th>Has Image</th>
+      <th>Price</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {jsonData.MENU.map((menuitems) => (
+      <tr key={`${menuitems.CATEGORY},${menuitems.PRICE}${menuitems.MENU}`} >
+        <td>{menuitems.MENU}</td>
+        <td>{menuitems.CATEGORY}</td>
+        <td>{menuitems.IMAGE ? 'TRUE': 'FALSE'}</td>
+        <td>{menuitems.PRICE}</td>
+        <td><button onClick={() => clickOnEdit(menuitems.MENU, menuitems.PRICE, menuitems.CATEGORY,menuitems.IMAGE)}>Edit</button></td>
+        <td><button onClick={() => handleDelete(menuitems.MENU, menuitems.CATEGORY)}>Delete</button></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+   
+    </div>
+  );
+}
+
+export default AdminPage;
