@@ -52,7 +52,9 @@ const jwtSecret = process.env.JWT_SECRET;
 
 
 
-
+app.use('/', (res,req) => {
+  res.send("server is running")
+})
 
 app.post('/api/register', async (req, res) => {
   const { username, password, code } = req.body;
