@@ -1,7 +1,7 @@
 {
   "name": "call-a-bowl",
   "version": "0.1.0",
-  "proxy": "http://localhost:5000",
+  "proxy": "https://call-a-bowl-fullstack-project.vercel.app/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
