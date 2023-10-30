@@ -5,12 +5,6 @@ const port = process.env.PORT || 5000;
 
 // Configure middleware
 
-app.use(cors());
-app.use(bodyParser.json());
-
-
-const storage = multer.memoryStorage(); // Store files in memory
-const upload = multer({ storage: storage });
 
 
 
@@ -19,13 +13,6 @@ const upload = multer({ storage: storage });
 
 
 
-
-
-
-// JWT Secret (Use environment variables in production)
-const jwtSecret = process.env.JWT_SECRET; 
-
-// Registration Route
 
 
 
@@ -35,6 +22,6 @@ app.use('/', (res,req) => {
 })
 
 // Start the server
-app.listen(port, () => {
+app.listen(5000, () => {
   console.log(`Server is running on port ${port}`);
 });
