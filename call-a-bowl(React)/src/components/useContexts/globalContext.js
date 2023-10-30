@@ -16,6 +16,8 @@ function AppProvider({ children }) {
     try {
       const cachedData = localStorage.getItem('jsonData');
       const response = await fetch(`${backendUrl}/api/products`);
+      console.log(response);
+      console.log(backendUrl);
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
