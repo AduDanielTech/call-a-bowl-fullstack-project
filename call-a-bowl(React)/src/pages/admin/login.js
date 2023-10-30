@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +19,7 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/api/login', {
+      const response = await axios.post(`${backendUrl}/api/login`, {
         username,
         password,
       });
@@ -59,7 +61,7 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
   const handleProtectedRequest = async () => {
     try {
       // Include the JWT token in the request headers
-      const response = await axios.get('/api/protected', {
+      const response = await axios.get(`${backendUrl}/api/protected`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

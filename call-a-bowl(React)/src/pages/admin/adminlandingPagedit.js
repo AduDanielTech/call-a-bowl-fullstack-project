@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
     const navigate = useNavigate();
     const [response, setresponse] = useState('');
@@ -35,7 +36,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
     const fetchData = async () => {
       try {
         const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
-        const response = await fetch('/api/products');
+        const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -75,11 +76,12 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
       try{
       
   
-      const deleteUrl = '/api/special/delete'
+      const deleteUrl = `${backendUrl}/api/special/delete`
   
         const postData = {
           itemName ,CATEGORY
         } 
+
         axios.post(deleteUrl, postData)
         .then(function (response) {
           console.log('POST request was successful:', response.data);
@@ -126,7 +128,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
          formData.append('IMAGE', editMenuItem.IMAGE)
       
          try {
-          const response = await fetch('/api/special/edit', {
+          const response = await fetch(`${backendUrl}/api/special/edit`, {
             method: 'POST',
             body: formData,
           });

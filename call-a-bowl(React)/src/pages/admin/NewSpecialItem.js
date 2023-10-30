@@ -1,6 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
+
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 const NewSpecialItem = ({ isAuthenticated }) => {
   const [newMenuItem, setNewMenuItem] = useState({
     MENU: '',
@@ -26,7 +30,7 @@ const NewSpecialItem = ({ isAuthenticated }) => {
     formData.append('CATEGORY', newMenuItem.CATEGORY);
     console.log(formData);
     try {
-      const response = await fetch('/api/special/new', {
+      const response = await fetch(`${backendUrl}/api/special/new`, {
         method: 'POST',
         body: formData,
       });

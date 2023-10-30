@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function AdminPage({ isAuthenticated ,token}) {
   const navigate = useNavigate();
   const [editResponse, seteditResponse] = useState('');
@@ -53,7 +56,7 @@ function AdminPage({ isAuthenticated ,token}) {
   const fetchData = async () => {
     try {
       const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
-      const response = await fetch('/api/products');
+      const response = await fetch(`${backendUrl}/api/products`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -95,7 +98,7 @@ function AdminPage({ isAuthenticated ,token}) {
     try{
     
 
-    const deleteUrl = '/api/product/delete'
+    const deleteUrl = `${backendUrl}/api/product/delete`
 
       const postData = {
         itemName ,CATEGORY
@@ -145,7 +148,7 @@ function AdminPage({ isAuthenticated ,token}) {
        formData.append('IMAGE', editMenuItem.IMAGE)
     
        try {
-        const response = await fetch('/api/product/edit', {
+        const response = await fetch(`${backendUrl}/api/product/edit`, {
           method: 'POST',
           body: formData,
         });

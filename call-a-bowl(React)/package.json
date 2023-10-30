@@ -14,6 +14,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.7.7",
     "reveal-on-scroll-react": "^0.0.6",
+    "swr": "^2.2.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

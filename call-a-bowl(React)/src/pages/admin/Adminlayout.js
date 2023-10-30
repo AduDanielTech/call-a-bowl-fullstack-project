@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Adminlayout = ({ children, setIsAuthenticated ,isAuthenticated, token, setToken }) => {
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Adminlayout = ({ children, setIsAuthenticated ,isAuthenticated, token, set
     const handleLogout = async () => {
       try {
         // Send a request to the backend to invalidate the token (optional)
-        await axios.get('/api/logout');
+        await axios.get(`${backendUrl}/api/logout`);
     
         // Clear the token from local storage
         localStorage.removeItem('token');

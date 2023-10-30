@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 function Registration({ setIsAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +13,7 @@ function Registration({ setIsAuthenticated }) {
 
   const handleRegistration = async () => {
     try {
-      const response = await axios.post('/api/register', {
+      const response = await axios.post(`${backendUrl}/api/register`, {
         username,
         password,
         code,
