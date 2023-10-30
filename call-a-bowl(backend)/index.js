@@ -413,6 +413,18 @@ app.get('/api/logout', (req, res) => {
 
 
 
+// Allow requests from your frontend's origin during development
+const allowedOrigins = ['http://localhost:3000', 'https://call-a-bowl-fullstack-project.vercel.app', 'https://call-a-bowl-fullstack-project-a6kp-client.vercel.app/'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+}));
 
 
 

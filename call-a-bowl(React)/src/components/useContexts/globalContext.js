@@ -8,31 +8,34 @@ function AppProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   // Function to fetch data and handle caching
   const fetchData = async () => {
     try {
-      const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
-      const response = await fetch('/api/products');
+      const cachedData = localStorage.getItem('jsonData');
+      const response = await fetch(`${backendUrl}/api/products`);
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      
-      if (cachedData && JSON.stringify(data.newItem) === cachedData) {
-        // Data is the same as cached data, no need to update stat
-        
-
-        setJsonData(JSON.parse(cachedData));
-
+  
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+  
+        if (cachedData && JSON.stringify(data.newItem) === cachedData) {
+          setJsonData(JSON.parse(cachedData));
+        } else {
+          localStorage.setItem('jsonData', JSON.stringify(data.newItem));
+          setJsonData(data.newItem);
+        }
+  
         setIsLoading(false);
         setError(null);
       } else {
-        localStorage.setItem('jsonData', JSON.stringify(data.newItem));
-
-        
-        setJsonData(data.newItem);
-        setIsLoading(false);
-        setError(null);
+        throw new Error('Response is not in JSON format');
       }
     } catch (error) {
       console.error('Error fetching menu data:', error);
@@ -40,7 +43,7 @@ function AppProvider({ children }) {
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchData();
   }, []); // useEffect to trigger fetchData when the component mounts
