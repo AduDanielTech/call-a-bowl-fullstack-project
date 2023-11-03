@@ -92,8 +92,8 @@ if (isDuplicate) {
 
     // Save the updated products
     await UsersRepo.create(newUser);
-
-    res.status(201).json({ message: 'User registered successfully' });
+    const token = jwt.sign({ username }, jwtSecret); // Use the secret
+    res.status(201).json({ message: 'User registered successfully' ,token});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error registering user' });

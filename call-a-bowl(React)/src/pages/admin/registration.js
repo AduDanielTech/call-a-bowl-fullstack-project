@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Registration({ setIsAuthenticated }) {
+function Registration({ setIsAuthenticated, token, setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
@@ -24,6 +24,7 @@ function Registration({ setIsAuthenticated }) {
 
       // Assuming your backend returns a success message in the response
       if (response.data.message === 'User registered successfully') {
+        setToken(response.data.token);
         // Redirect to the admin page after successful registration
         return navigate('/admin');
       } else {

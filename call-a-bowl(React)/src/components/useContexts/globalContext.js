@@ -13,7 +13,7 @@ function AppProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = "https://call-a-bowl-fullstack-project.vercel.app";
 
   const fetchData = async () => {
     try {

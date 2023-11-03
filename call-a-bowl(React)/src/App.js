@@ -92,7 +92,8 @@ function App() {
                 element={<Login token={token} setToken={setToken} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
               />
 
-              <Route exact path="/Register" element={<Registration isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />} /> 
+              <Route exact path="/Register" element={
+              <Registration token={token} setToken={setToken} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />} /> 
               <Route path="/" element={<Home />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/error" element={<ErrorBoundary />} />
