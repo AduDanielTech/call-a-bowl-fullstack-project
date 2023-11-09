@@ -40,10 +40,12 @@ function Registration({ setIsAuthenticated, token, setToken }) {
     } catch (error) {
       // Check if error.response exists and has the expected structure
       setloading(false)
-      setresponse('an error occued while loading')
       if (error.response && error.response.data && error.response.data.error) {
-        console.error(error.response.data.error);
+      setresponse(error.response.data.error)
+      
+      console.error(error.response.data.error);
       } else {
+      setresponse('an error occued while loading')
         console.error('An unknown error occurred');
       }
     }
@@ -55,6 +57,7 @@ function Registration({ setIsAuthenticated, token, setToken }) {
       {
         response && response
       }
+      <br/>
       <input
         type="text"
         placeholder="Username"
