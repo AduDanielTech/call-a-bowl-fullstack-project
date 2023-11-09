@@ -2941,6 +2941,7 @@ min-height: 320px;
 
 .login-btn{
     background-color: var(--orange-50);
+    padding: 2rem 0rem;
 }
 .login-btn:active{
     background-color: #000;
