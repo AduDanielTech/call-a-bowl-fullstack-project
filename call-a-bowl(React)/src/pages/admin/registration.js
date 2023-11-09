@@ -8,10 +8,12 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function Registration({ setIsAuthenticated, token, setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setloading] = useState(false);
   const [code, setCode] = useState('');
   const navigate = useNavigate();
 
   const handleRegistration = async () => {
+    setloading(true)
     try {
       const response = await axios.post(`${backendUrl}/api/register`, {
         username,
@@ -25,13 +27,16 @@ function Registration({ setIsAuthenticated, token, setToken }) {
       // Assuming your backend returns a success message in the response
       if (response.data.message === 'User registered successfully') {
         setToken(response.data.token);
+        setloading(false)
         // Redirect to the admin page after successful registration
         return navigate('/admin');
       } else {
+        setloading(false)
         console.error('Registration failed'); // Handle other possible responses
       }
     } catch (error) {
       // Check if error.response exists and has the expected structure
+      setloading(false)
       if (error.response && error.response.data && error.response.data.error) {
         console.error(error.response.data.error);
       } else {
@@ -61,7 +66,7 @@ function Registration({ setIsAuthenticated, token, setToken }) {
         value={code}
         onChange={(e) => setCode(e.target.value)}
       />
-      <button onClick={handleRegistration}>Register</button>
+      <button onClick={handleRegistration } className='login-btn'>Register</button>
       <a href="/login">Login instead</a>
     </div>
   );
