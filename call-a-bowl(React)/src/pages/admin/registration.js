@@ -9,6 +9,7 @@ function Registration({ setIsAuthenticated, token, setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setloading] = useState(false);
+  const [response, setresponse] = useState('');
   const [code, setCode] = useState('');
   const navigate = useNavigate();
 
@@ -27,16 +28,19 @@ function Registration({ setIsAuthenticated, token, setToken }) {
       // Assuming your backend returns a success message in the response
       if (response.data.message === 'User registered successfully') {
         setToken(response.data.token);
+        setresponse('User registered successfully')
         setloading(false)
         // Redirect to the admin page after successful registration
         return navigate('/admin');
       } else {
         setloading(false)
+        setresponse('Registration failed')
         console.error('Registration failed'); // Handle other possible responses
       }
     } catch (error) {
       // Check if error.response exists and has the expected structure
       setloading(false)
+      setresponse('an error occued while loading')
       if (error.response && error.response.data && error.response.data.error) {
         console.error(error.response.data.error);
       } else {
@@ -48,6 +52,9 @@ function Registration({ setIsAuthenticated, token, setToken }) {
   return (
     <div>
       <h1>Registration</h1>
+      {
+        response && response
+      }
       <input
         type="text"
         placeholder="Username"
