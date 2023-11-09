@@ -67,6 +67,14 @@ function Registration({ setIsAuthenticated, token, setToken }) {
         onChange={(e) => setCode(e.target.value)}
       />
       <button onClick={handleRegistration } className='login-btn'>Register</button>
+      {
+          loading?
+          
+  <div className="custom-loader"></div>
+
+:
+''
+        }
       <a href="/login">Login instead</a>
     </div>
   );
