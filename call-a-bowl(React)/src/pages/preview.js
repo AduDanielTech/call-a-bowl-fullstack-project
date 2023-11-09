@@ -45,7 +45,7 @@ function Preview() {
       function whatsappFunc() {
         
         const whatsapp = `${userDetails.username},${userDetails.address},${userDetails.email},${formatCartAsSentence(cart)},total: ₦${calculateTotal(cart)}`
-        var whatsappUrl = `https://wa.me/2349079730611?text=${whatsapp}`;
+        var whatsappUrl = `https://wa.me/234818003641?text=${whatsapp}`;
         window.open(whatsappUrl, "_blank");
         setCart([])
         saveCartToLocalStorage(cart)

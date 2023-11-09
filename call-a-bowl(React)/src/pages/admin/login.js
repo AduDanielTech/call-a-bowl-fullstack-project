@@ -9,6 +9,8 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [response, setResponse] = useState('');
+  const [loading, setloading] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -18,6 +20,7 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
 
 
   const handleLogin = async () => {
+    setloading(true)
     try {
       const response = await axios.post(`${backendUrl}/api/login`, {
         username,
@@ -27,24 +30,29 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
       // Check that the request was successful
       if (response.status !== 200) {
         setResponse('Login failed')
+        setloading(false)
         throw new Error('Login failed');
       }
   
       // Check that the response data is defined
       if (!response.data) {
         setResponse('Login failed')
+        setloading(false)
         throw new Error('Login failed');
       }
   
       // Check that the response data has a token property
       if (!response.data.token) {
         setResponse('Login failed')
+        setloading(false)
         throw new Error('Login failed');
       }
       
       // Save the JWT token to state
       setToken(response.data.token);
       setResponse('Login successful')
+    setloading(false)
+
       setIsAuthenticated(true)
       
        navigate("/admin")
@@ -111,8 +119,16 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
         </div>
       )}
               </div>
-              <button className="button is-primary" onClick={handleLogin}>Login</button>
-            
+              
+              <button className="button is-primary login-btn" onClick={handleLogin}>Login</button>
+              {
+          loading?
+          
+  <div className="custom-loader"></div>
+
+:
+''
+        }
             <a href="/register">Need an account? Sign Up</a>
           </div>
         </div>

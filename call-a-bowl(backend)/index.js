@@ -414,7 +414,7 @@ app.get('/api/logout', (req, res) => {
 
 
 // Allow requests from your frontend's origin during development
-const allowedOrigins = ['http://localhost:3000', 'https://call-a-bowl-fullstack-project.vercel.app', 'https://call-a-bowl-fullstack-project-a6kp-client.vercel.app/'];
+const allowedOrigins = ['https://call-a-bowl-fullstack-project-a6kp-client.vercel.app','http://localhost:3000', 'https://call-a-bowl-fullstack-project.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
