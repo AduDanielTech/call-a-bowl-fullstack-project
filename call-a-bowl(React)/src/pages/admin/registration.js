@@ -45,7 +45,7 @@ function Registration({ setIsAuthenticated, token, setToken }) {
       
       console.error(error.response.data.error);
       } else {
-      setresponse('an error occued while loading')
+      setresponse(error)
         console.error('An unknown error occurred');
       }
     }
