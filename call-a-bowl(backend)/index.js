@@ -74,7 +74,7 @@ if (!Array.isArray(all)) {
 }
 
 // Check if the username already exists
-const isDuplicate = all.some((user) => user.username === username);
+const isDuplicate =Object.values(all).some((user) => user.username === username);
 
 if (isDuplicate) {
   return res.status(400).json({ error: 'Username already exists' });
@@ -117,7 +117,7 @@ app.post('/api/login', async (req, res) => {
     const users = Object.values(usersData);
     
     // Find the user by username
-    const user = users.find(user => user.username === username);
+    const user = Object.values(users).find(user => user.username === username);
     
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -182,13 +182,15 @@ app.get('/api/protected', verifyToken, (req, res) => {
 
 
 app.get('/api/products', async (req, res) => {
-  const data = {
-    
+  const data = {    
       "Landing_Page": await LandingRepo.getAll(),
       "MENU": await productsRepo.getAll(),
       "USERS": await UsersRepo.getAll(),
     }
+    const dataArray = Object.entries(data).map(([key, value]) => ({ [key]: value }));
   res.status(201).json({ message: 'Item added successfully', newItem:  data});
+    /* const dataArray = Object.entries(data).map(([key, value]) => ({ [key]: value }));
+  res.status(201).json({ message: 'Item added successfully', newItem:  dataArray}); */
 });
 
 
@@ -220,7 +222,7 @@ console.log(newItemDetails);
     const products = await productsRepo.getAll();
 
     // Check if MENU and CATEGORY combination already exists in products.MENU
-    const isDuplicate = products.some((item) => (
+    const isDuplicate = Object.values(products).some((item) => (
       item.MENU === newItemDetails.MENU && item.CATEGORY === newItemDetails.CATEGORY
     ));
 
@@ -235,11 +237,10 @@ console.log(newItemDetails);
 
     res.status(201).json({ message: 'Item added successfully', newItem: newItemDetails });
   } catch (error) {
-    console.error(error);
+    console.error('Error in /api/product/new:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 
 
@@ -250,44 +251,61 @@ console.log(newItemDetails);
 
 app.post('/api/product/delete', async (req, res) => {
   try {
-    const { itemName,CATEGORY } = req.body;
-    const reposit = await productsRepo.getAll()
+    const { itemName, CATEGORY } = req.body;
+    const reposit = await productsRepo.getAll();
+
+    // Log the received parameters
+    console.log('Deleting item:', itemName, 'in category:', CATEGORY);
+
+    // Check if the item exists before attempting deletion
+    const existingItem =  Object.values(reposit).find(item => item.MENU === itemName && item.CATEGORY === CATEGORY);
+
+    if (!existingItem) {
+      return res.status(404).json({ error: `Item ${itemName} not found in category ${CATEGORY}` });
+    }
+
+    // Log before deletion
+    console.log('Deleting item from repository:', existingItem);
+
+    // Perform the deletion
+    await productsRepo.delete(itemName);
     
-    productsRepo.delete(itemName)
-    
-    res.status(201).json({ message: `Item ${itemName} deleted successfully hii`, newItem: req.body.CATEGORY });
+    console.log('Deleted successfully');
+    const response = await productsRepo.getAll();
+     res.status(200).json({ message: `Item ${itemName} deleted successfully`, newItem:  response});
   } catch (error) {
-    console.error(error);
-    console.log('internal');
+    console.error('Error in /api/product/delete:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 
 
+
+
+
 app.post('/api/product/edit', upload.single('IMAGE'), async (req, res) => {
   try {
     let imageBuffer = '';
-    
+
     if (req.file) {
       // Use Tinify to compress the uploaded image
       const firstCompressedBuffer = await tinify.fromBuffer(req.file.buffer).toBuffer();
-  
-  // Second compression
-  const doublyCompressedBuffer = await tinify.fromBuffer(firstCompressedBuffer).toBuffer();
-  
-  imageBuffer = doublyCompressedBuffer;
-    }
-    if(!req.file){
-      return res.status(400).json({ error: 'No file uploaded' });
+
+      // Second compression
+      const doublyCompressedBuffer = await tinify.fromBuffer(firstCompressedBuffer).toBuffer();
+
+      imageBuffer = doublyCompressedBuffer;
     }
     
     const { prevMENU, prevCATEGORY, MENU, CATEGORY, PRICE } = req.body;
+
+    // If no image was uploaded, set IMAGE to an empty string
     const newItemDetails = {
-      MENU, 
+      MENU,
       PRICE,
       CATEGORY,
-      IMAGE: imageBuffer.toString('base64'), // Convert to base64
+      IMAGE: req.file ? imageBuffer.toString('base64') : '', // Convert to base64 if an image is uploaded
     };
 
     productsRepo.update(prevMENU, newItemDetails);
@@ -304,11 +322,13 @@ app.post('/api/product/edit', upload.single('IMAGE'), async (req, res) => {
 
 
 
+
 app.post('/api/special/new', upload.single('IMAGE'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
+    console.log('hey');
 
     let imageBuffer = '';
 
@@ -327,7 +347,7 @@ app.post('/api/special/new', upload.single('IMAGE'), async (req, res) => {
     // Load the existing products
     const landing_Page = await LandingRepo.getAll();
     // Check if MENU and CATEGORY combination already exists in products.Landing_Page.SPECIAL_ORDER
-    const isDuplicate = landing_Page.some((item) => (
+    const isDuplicate = Object.values(landing_Page).some((item) => (
       item.MENU === newItemDetails.MENU && item.CATEGORY === newItemDetails.CATEGORY
     ));
 
@@ -381,20 +401,17 @@ app.post('/api/special/edit', upload.single('IMAGE'), async (req, res) => {
       const compressedBuffer = await tinify.fromBuffer(req.file.buffer).toBuffer();
       imageBuffer = compressedBuffer;
     }
-    if(!req.file){
-      console.log('missing');
-    }
+    
     
     const { prevMENU, prevCATEGORY, MENU, CATEGORY, PRICE } = req.body;
     const newItemDetails = {
       MENU,
       PRICE,
       CATEGORY,
-      IMAGE: imageBuffer.toString('base64'), 
+      IMAGE: req.file ? imageBuffer.toString('base64'): '', 
     };
 
-    LandingRepo.update(prevMENU);
-    console.log(newItemDetails);
+    LandingRepo.update(prevMENU, newItemDetails);
 
     const newproducts = await productsRepo.getAll();
 

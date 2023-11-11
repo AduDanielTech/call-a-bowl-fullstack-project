@@ -57,7 +57,7 @@ function Menu() {
       }, []);
     }
     
-    setCategories(getCategories(jsonData.MENU)) 
+    setCategories(getCategories(Object.values(jsonData.MENU))) 
   }, [jsonData]);
 
 
@@ -503,7 +503,7 @@ if (lSLoaded) {
                 </div>
                 <div className="menu_product_drink_checkbox menu_product_swallow_checkbox">
                 {overlayData.show  ?
-  jsonData?.MENU?.map((menuItem) => {
+  Object.values(jsonData?.MENU).map((menuItem) => {
     if (menuItem.CATEGORY === "DRINKS") {    
       return (
         <>
@@ -552,7 +552,7 @@ if (lSLoaded) {
               <Select
                 options={
                 overlayData.show
-                ? jsonData?.MENU?.filter((menuItem) => menuItem.CATEGORY === 'EXTRAS').map((menuItem) => {
+                ? Object.values(jsonData?.MENU).filter((menuItem) => menuItem.CATEGORY === 'EXTRAS').map((menuItem) => {
                   return { value:menuItem.MENU, label:  `${ menuItem.MENU } - ${  menuItem.PRICE}`,price: parseInt(menuItem.PRICE)};
                 })
                 :
@@ -577,7 +577,7 @@ if (lSLoaded) {
                   swallow
                 </div>
                 <div className="menu_product_drink_checkbox menu_product_swallow_checkbox">
-                {jsonData?.MENU?.map((menuItem) => {
+                {Object.values(jsonData?.MENU).map((menuItem) => {
               if (menuItem.CATEGORY === "SWALLOW") {
                 
                 return(
@@ -678,7 +678,7 @@ if (lSLoaded) {
           <div className="item_menu_name">
             {category}
           </div>
-          {jsonData?.MENU
+          {Object.values(jsonData?.MENU)
             .filter((item) => item.CATEGORY === category)
             .map((menuItem, index) => (
               <MenuItemsCont cart={cart} handleMenuItemClick={handleMenuItemClick} index={index} menuItem={menuItem} />

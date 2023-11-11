@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+
 
 
 
@@ -13,6 +15,7 @@ const NewSpecialItem = ({ isAuthenticated }) => {
     CATEGORY: 'SOUP',
   });
   const [response, setResponse] = useState('');
+  const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
@@ -20,46 +23,69 @@ const NewSpecialItem = ({ isAuthenticated }) => {
     setNewMenuItem({ ...newMenuItem, [name]: newValue });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('MENU', newMenuItem.MENU);
-    formData.append('PRICE', parseInt(newMenuItem.PRICE, 10));
-    formData.append('IMAGE', newMenuItem.IMAGE);
-    formData.append('CATEGORY', newMenuItem.CATEGORY);
-    console.log(formData);
-    try {
-      const response = await fetch(`${backendUrl}/api/special/new`, {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (response.ok) {
-        const responseData = await response.json(); // Parse the JSON response
-  
-        // Handle success, e.g., show a success message and access the details
-        console.log(responseData.message);
-        setResponse(responseData.message);
-        console.log('New Item Details:', responseData.newItem);
-      } else {
-        // Handle errors, e.g., show an error message
-        console.error('Error adding item:', response.statusText);
-        setResponse('Network error:', response.statusText);
-      }
-    } catch (error) {
-      // Handle network errors
-      console.error('Network error:', error);
-      setResponse('Network error:', error);
-    }
-  };
+ 
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  setloading(true);
 
+  const formData = new FormData();
+  formData.append('IMAGE', newMenuItem.IMAGE);
+  formData.append('MENU', newMenuItem.MENU);
+  formData.append('PRICE', parseInt(newMenuItem.PRICE, 10));
+  formData.append('CATEGORY', newMenuItem.CATEGORY);
+
+  try {
+    const response = await axios.post(`${backendUrl}/api/special/new`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (response.status === 201) {
+      const responseData = response.data;
+
+      // Handle success, e.g., show a success message and access the details
+      console.log(responseData.message);
+      setResponse(responseData.message);
+      console.log('New Item Details:', responseData.newItem);
+    } else {
+      // Handle errors, e.g., show an error message
+      console.error('Error adding item:', response.statusText);
+      setResponse(`Error adding item: ${response.statusText}`);
+    }
+
+    setloading(false);
+  } catch (error) {
+    // Handle network errors
+    console.error('Network error :', error);
+  
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('Response data:', error.response.data);
+      console.error('HTTP status code:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received. Request details:', error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error message:', error.message);
+    }
+  
+    setResponse(`Network error or please upload image: ${error.message}`);
+    setloading(false);
+  }
+  
+}
+  
   return (
     <div>
       <form encType="multipart/form-data" method="post" onSubmit={handleSubmit}>
 
       <br/>
         <div style={{color:'green'}}>
+          {loading && <div className="custom-loader"></div>}
           {response? response : ''}
           </div>
         <br/>
@@ -68,7 +94,7 @@ const NewSpecialItem = ({ isAuthenticated }) => {
           type="text"
           name="MENU"
           placeholder="special Item"
-          value={newMenuItem.MENU}
+          value={newMenuItem.MENU}  
           onChange={handleInputChange}
         />
         <input

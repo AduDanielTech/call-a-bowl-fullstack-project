@@ -17,7 +17,7 @@ function Home() {
 
 
   const [specialOrder, setspecialOrder] = useState(jsonData.Landing_Page);
-  const [menu, setMenu] = useState(jsonData.MENU);
+  const [menu, setMenu] = useState(Object.values(jsonData.MENU));
   const [searchinput, setSearchinput] = useState();
   const [opensearchinput, setOpenSearchInput] = useState(false);
   const [filteredSerch, setFilteredSerch] = useState();
@@ -207,7 +207,8 @@ function Home() {
             <h1>Special <span className="orange"><span className="orange_span"></span>order</span> of the day!</h1>
             <div>
               {
-                specialOrder.map((special,index) => {
+                Object.values(specialOrder)
+                .map((special,index) => {
                   return (
                     <div animation="slide-in-bottom" delay={`0.${index}`} className="special_order_cards" onClick={(e)=> quickOrder(special.MENU,special.PRICE,special.CATEGORY) }>
                     <img className="special_order_cards_img" src={`data:image/png;base64,${special.IMAGE}`} alt='special_order' />

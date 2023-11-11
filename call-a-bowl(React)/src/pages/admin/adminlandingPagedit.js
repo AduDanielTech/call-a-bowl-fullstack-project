@@ -8,6 +8,8 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
     const navigate = useNavigate();
     const [response, setresponse] = useState('');
     const [editResponse, seteditResponse] = useState('');
+    const [deleteloading, setdeleteloading] = useState(false);
+    const [editloading, seteditloading] = useState(false);
     const [editMenuItem, seteditMenuItem] = useState({
       prevMENU: '',
       prevCATEGORY: '',
@@ -72,32 +74,49 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
 </div>;
     }
   
-    function handleDelete(itemName,CATEGORY) {
-      try{
-      
-  
-      const deleteUrl = `${backendUrl}/api/special/delete`
-  
+    const handleDelete = async (itemName, CATEGORY) => {
+      setdeleteloading(true);
+    
+      try {
+        const deleteUrl = `${backendUrl}/api/special/delete`;
+    
         const postData = {
-          itemName ,CATEGORY
-        } 
-
-        axios.post(deleteUrl, postData)
-        .then(function (response) {
-          console.log('POST request was successful:', response.data);
-          setresponse(response.data)
-          window.location.reload();
-        }).catch(function (error) {
-          // Handle any errors that occurred during the request
-          setresponse(error)
-          console.error('Error making POST request:', error);
-        })
-  
-      }catch(e){
-        console.error('Error processing', e );
-        setresponse(e)
+          itemName,
+          CATEGORY,
+        };
+    
+        // Make the delete request
+        await axios.post(deleteUrl, postData);
+    
+        // Update the state based on the current data
+        const updatedData = { ...jsonData }; // assuming jsonData is your current state
+        const updatedCategories = Object.values(updatedData.Landing_Page).filter(
+          (item) => item.MENU !== itemName
+        );
+        console.log(updatedCategories);
+        updatedData.Landing_Page = updatedCategories;
+    
+        // Update the state without fetching updated data
+        setJsonData(updatedData);
+        setresponse('Item deleted successfully.');
+        setdeleteloading(false);
+      } catch (error) {
+        setdeleteloading(false);
+    
+        // Handle errors in the delete request
+        console.error('Error in handleDelete:', error);
+    
+        // Set a more specific error message based on the error
+        if (error.response) {
+          setresponse(`Error in handleDelete: ${error.response.data.error}`);
+        } else if (error.request) {
+          setresponse('Network error. Please check your internet connection.');
+        } else {
+          setresponse('An unexpected error occurred.');
+        }
       }
-    }
+    };
+    
   
   
   
@@ -117,6 +136,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
   
     const handleSubmit = async (event) => {
       event.preventDefault();
+      seteditloading(true)
   
       const formData = new FormData();
       
@@ -140,15 +160,18 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
             
             seteditResponse(responseData.message);
             console.log('edit Item Details:', responseData.newItem);
-            window.location.reload();
+            seteditloading(false)
             console.log('New Item Details:', responseData.newItem);
+            window.location.reload();
+            
           } else {
             // Handle errors, e.g., show an error message
+            seteditloading(false)
             console.error('Error adding item:', response.statusText);
           }
         } catch (error) {
           // Handle network errors
-          
+          seteditloading(false)
           seteditResponse('Network error:', error);
         }
       
@@ -166,6 +189,8 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
         CATEGORY: 'SOUP',
         overlay: false,
       });
+
+      
     };
 
     function closeEditOverlay() {
@@ -189,7 +214,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
   <div className="cart_overlay_container">
   <div>
         <form encType="multipart/form-data" method="post" onSubmit={handleSubmit}>
-  
+      {editloading && <div className="custom-loader"></div>}
         <br/>
           <div style={{color:'green'}}>{editResponse? editResponse : ''}</div>
           <br/>
@@ -235,7 +260,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
                   <option value="SWALLOW">SWALLOW</option>
                   <option value="SOUP">SOUP</option>
                 </select>
-          <button type="submit">Submit</button>
+          <button className=' login-btn' type="submit">Submit</button>
           <div  onClick={closeEditOverlay}>cancel</div>
         </form>
       </div>
@@ -253,14 +278,14 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
       </tr>
     </thead>
     <tbody>
-      {jsonData.Landing_Page.map((item) => (
+      {Object.values(jsonData.Landing_Page).map((item) => (
         <tr key={`${item.CATEGORY},${item.PRICE}${item.MENU}`} >
           <td>{item.MENU}</td>
           <td>{item.IMAGE ? "TRUE": 'FALSE'}</td>
           <td>{item.CATEGORY}</td>
           <td>{item.PRICE}</td>
           <td><button onClick={() => clickOnEdit(item.MENU, item.PRICE, item.CATEGORY,item.IMAGE)}>Edit</button></td>
-          <td><button onClick={() => handleDelete(item.MENU, item.CATEGORY)}>Delete</button></td>
+          <td><button onClick={() => handleDelete(item.MENU, item.CATEGORY)}>{deleteloading ? <div className="custom-loader"></div>: 'Delete'}</button></td>
         </tr>
       ))}
     </tbody>

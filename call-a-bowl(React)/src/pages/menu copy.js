@@ -30,7 +30,7 @@ function Menu() {
 
   useEffect(() => {
     // Extract SWALLOW_OPTIONS from JSON data
-    const swallowOptions = jsonData.MENU?.map((category) => category.SWALLOW_OPTION).filter(Boolean);
+    const swallowOptions = Object.values(jsonData.MENU)?.map((category) => category.SWALLOW_OPTION).filter(Boolean);
       
     setSwallowOption(swallowOptions[0]);
     
@@ -38,7 +38,7 @@ function Menu() {
 
   useEffect(() => {
     // Extract DRINKS from JSON data
-    const drinks = jsonData.MENU?.map((category) => category.DRINKS).filter(Boolean);
+    const drinks = Object.values(jsonData.MENU)?.map((category) => category.DRINKS).filter(Boolean);
     setMenuOverlayDrinks(drinks);
   }, [jsonData]);
 

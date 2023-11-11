@@ -10,6 +10,7 @@ function AdminPage({ isAuthenticated ,token}) {
   const [editResponse, seteditResponse] = useState('');
   const [response, setresponse] = useState('');
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+  const [deleteloading, setdeleteloading] = useState(false);
 
 
   const [editMenuItem, seteditMenuItem] = useState({
@@ -67,6 +68,8 @@ function AdminPage({ isAuthenticated ,token}) {
 
         setJsonData(JSON.parse(cachedData));
         setIsLoading(false);
+        console.log(JSON.parse(cachedData));
+        console.log('JSON.parse(cachedData)');
       } else {
         // Data is different or not cached, update state and cache
         localStorage.setItem('jsonData', JSON.stringify(data.newItem));
@@ -74,6 +77,7 @@ function AdminPage({ isAuthenticated ,token}) {
         
         setJsonData(data.newItem);
         setIsLoading(false);
+        console.log(data.newItem);
       }
     } catch (error) {
       
@@ -94,32 +98,50 @@ function AdminPage({ isAuthenticated ,token}) {
 </div>;
   }
 
-  function handleDelete(itemName,CATEGORY) {
-    try{
-    
-
-    const deleteUrl = `${backendUrl}/api/product/delete`
-
+  const handleDelete = async (itemName, CATEGORY) => {
+    setdeleteloading(true);
+  
+    try {
+      const deleteUrl = `${backendUrl}/api/product/delete`;
+  
       const postData = {
-        itemName ,CATEGORY
-      } 
-      axios.post(deleteUrl, postData)
-      .then(function (response) {
-        
-        setresponse( response.data)
-        window.location.reload();
-      }).catch(function (error) {
-        // Handle any errors that occurred during the request
-        
-        setresponse(error)
-      })
-
-    }catch(e){
-      setresponse('Error processing',e)
-     
+        itemName,
+        CATEGORY,
+      };
+  
+      // Make the delete request
+      await axios.post(deleteUrl, postData);
+  
+      // Update the state based on the current data
+      const updatedData = { ...jsonData }; // assuming jsonData is your current state
+      const updatedCategories = Object.values(updatedData.MENU).filter(
+        (item) => item.MENU !== itemName
+      );
+      updatedData.MENU = updatedCategories;
+  
+      // Update the state without fetching updated data
+      setJsonData(updatedData);
+      setresponse('Item deleted successfully.');
+      setdeleteloading(false);
+    } catch (error) {
+      setdeleteloading(false);
+  
+      // Handle errors in the delete request
+      console.error('Error in handleDelete:', error);
+  
+      // Set a more specific error message based on the error
+      if (error.response) {
+        setresponse(`Error in handleDelete: ${error.response.data.error}`);
+      } else if (error.request) {
+        setresponse('Network error. Please check your internet connection.');
+      } else {
+        setresponse('An unexpected error occurred.');
+      }
     }
-  }
-
+  };
+  
+  
+  
 
   function clickOnEdit(MENU,PRICE,CATEGORY,IMAGE) {
     seteditMenuItem(prevState => ({
@@ -176,18 +198,6 @@ function AdminPage({ isAuthenticated ,token}) {
       
     
       
-      setIsLoadingSubmit(false);
-      // Reset the editMenuItem state
-      seteditMenuItem({
-        prevMENU: '',
-        prevCATEGORY: '',
-        MENU: '',
-        PRICE: 0,
-        IMAGE: null,
-        showimage:'',
-        CATEGORY: 'SOUP',
-        overlay: false,
-      });
   };
   function  deleteImg() {
     seteditMenuItem((prev) => ({
@@ -294,16 +304,23 @@ function AdminPage({ isAuthenticated ,token}) {
     </tr>
   </thead>
   <tbody>
-    {jsonData.MENU.map((menuitems) => (
-      <tr key={`${menuitems.CATEGORY},${menuitems.PRICE}${menuitems.MENU}`} >
-        <td>{menuitems.MENU}</td>
-        <td>{menuitems.CATEGORY}</td>
-        <td>{menuitems.IMAGE ? 'TRUE': 'FALSE'}</td>
-        <td>{menuitems.PRICE}</td>
-        <td><button onClick={() => clickOnEdit(menuitems.MENU, menuitems.PRICE, menuitems.CATEGORY,menuitems.IMAGE)}>Edit</button></td>
-        <td><button onClick={() => handleDelete(menuitems.MENU, menuitems.CATEGORY)}>Delete</button></td>
-      </tr>
-    ))}
+  {Object.values(jsonData.MENU).map((menuitems) => (
+  <tr key={`${menuitems.CATEGORY},${menuitems.PRICE}${menuitems.MENU}`}>
+    <td>{menuitems.MENU}</td>
+    <td>{menuitems.CATEGORY}</td>
+    <td>{menuitems.IMAGE ? 'TRUE' : 'FALSE'}</td>
+    <td>{menuitems.PRICE}</td>
+    <td>
+      <button onClick={() => clickOnEdit(menuitems.MENU, menuitems.PRICE, menuitems.CATEGORY, menuitems.IMAGE)}>
+        Edit
+      </button>
+    </td>
+    <td>
+      <button onClick={() => handleDelete(menuitems.MENU, menuitems.CATEGORY)}>{deleteloading ? <div className="custom-loader"></div>: 'Delete'}</button>
+    </td>
+  </tr>
+))}
+
   </tbody>
 </table>
 

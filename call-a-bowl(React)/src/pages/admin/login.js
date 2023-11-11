@@ -57,6 +57,7 @@ function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
       
        navigate("/admin")
     } catch (error) {
+      setloading(false)
       setResponse(error.response.data.error)
       
     }
