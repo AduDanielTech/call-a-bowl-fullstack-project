@@ -109,6 +109,7 @@ const NewMenuItem = ({ isAuthenticated }) => {
                 <option value="DRINKS">DRINKS</option>
                 <option value="SWALLOW">SWALLOW</option>
                 <option value="SOUP">SOUP</option>
+                <option value="SOUP BOWLS">SOUP BOWLS</option>
               </select>
         <button type="submit">Submit</button>
       </form>

@@ -259,6 +259,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
                   <option value="DRINKS">DRINKS</option>
                   <option value="SWALLOW">SWALLOW</option>
                   <option value="SOUP">SOUP</option>
+                  <option value="SOUP BOWLS">SOUP BOWLS</option>
                 </select>
           <button className=' login-btn' type="submit">Submit</button>
           <div  onClick={closeEditOverlay}>cancel</div>
