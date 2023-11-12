@@ -249,6 +249,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
             onChange={handleInputChange}
                 >
                   <option value="SOUP">SOUP</option>
+                  <option value="SOUP BOWLS">SOUP BOWLS</option>
                   <option value="RICE MEALS">RICE MEALS</option>
                   <option value="YAM & PLANTAIN">YAM & PLANTAIN</option>
                   <option value="PASTA & NOODLES">PASTA & NOODLES</option>
@@ -258,8 +259,7 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
                   <option value="EXTRAS">EXTRAS</option>
                   <option value="DRINKS">DRINKS</option>
                   <option value="SWALLOW">SWALLOW</option>
-                  <option value="SOUP">SOUP</option>
-                  <option value="SOUP BOWLS">SOUP BOWLS</option>
+                  
                 </select>
           <button className=' login-btn' type="submit">Submit</button>
           <div  onClick={closeEditOverlay}>cancel</div>

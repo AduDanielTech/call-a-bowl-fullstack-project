@@ -99,6 +99,7 @@ const NewMenuItem = ({ isAuthenticated }) => {
           onChange={handleInputChange}
               >
                 <option value="SOUP">SOUP</option>
+                <option value="SOUP BOWLS">SOUP BOWLS</option>
                 <option value="RICE MEALS">RICE MEALS</option>
                 <option value="YAM & PLANTAIN">YAM & PLANTAIN</option>
                 <option value="PASTA & NOODLES">PASTA & NOODLES</option>
@@ -108,8 +109,6 @@ const NewMenuItem = ({ isAuthenticated }) => {
                 <option value="EXTRAS">EXTRAS</option>
                 <option value="DRINKS">DRINKS</option>
                 <option value="SWALLOW">SWALLOW</option>
-                <option value="SOUP">SOUP</option>
-                <option value="SOUP BOWLS">SOUP BOWLS</option>
               </select>
         <button type="submit">Submit</button>
       </form>
