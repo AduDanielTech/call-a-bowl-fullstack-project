@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const tinify = require('tinify');
 const fs = require('fs');
+const corsMiddleware = require('./cors');
 require('dotenv').config();
 
 
@@ -28,6 +29,7 @@ const port = process.env.PORT || 5000;
 // Configure middleware
 
 app.use(cors());
+app.use(corsMiddleware);
 app.use(bodyParser.json());
 
 

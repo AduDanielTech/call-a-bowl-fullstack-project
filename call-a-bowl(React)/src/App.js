@@ -1,13 +1,12 @@
 import './App.css'
 import React ,{useState,useEffect}from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
 
 
 import Layout from './components/layout';
 
 import Login from './pages/admin/login';
 import AdminPage from './pages/admin/adminpage';
-import withAuth from './pages/admin/withAuth';
 import Home from './pages/home';
 import Menu from './pages/menu';
 import Preview from './pages/preview';
