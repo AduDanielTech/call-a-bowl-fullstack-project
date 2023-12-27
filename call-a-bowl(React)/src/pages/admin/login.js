@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
+/* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
 function Login({setIsAuthenticated, isAuthenticated, token, setToken}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

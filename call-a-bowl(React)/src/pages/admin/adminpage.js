@@ -5,6 +5,7 @@ import axios from 'axios';
 
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
+/* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
 function AdminPage({ isAuthenticated ,token}) {
   const navigate = useNavigate();
   const [editResponse, seteditResponse] = useState('');
