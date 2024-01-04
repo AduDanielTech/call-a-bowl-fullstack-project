@@ -42,22 +42,19 @@ const upload = multer({ storage: storage });
 
 
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+
 
 // JWT Secret (Use environment variables in production)
 const jwtSecret = process.env.JWT_SECRET; 
 
 // Registration Route
+//"https://call-a-bowl-fullstack-project-a6kp-client.vercel.app/",
 
-
-
-
-
+app.use(cors(
+  {
+    origin:"https://call-a-bowl-fullstack-project-a6kp-client.vercel.app"
+  }
+));
 
 app.post('/api/register', async (req, res) => {
   const { username, password, code } = req.body;
@@ -105,12 +102,6 @@ if (isDuplicate) {
   }
 });
 
-
-
-
-
-
-
 app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -145,12 +136,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
 app.get('/api/login', async (req, res) => {
   try {
     res.send('hi');
@@ -159,8 +144,6 @@ app.get('/api/login', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
@@ -177,7 +160,6 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-
 // Protected route (Example)
 app.get('/api/protected', verifyToken, (req, res) => {
   res.json({ message: 'This is a protected route', user: req.user });
@@ -191,8 +173,9 @@ app.get('/api/products', async (req, res) => {
       "MENU": await productsRepo.getAll(),
       "USERS": await UsersRepo.getAll(),
     }
+
     const dataArray = Object.entries(data).map(([key, value]) => ({ [key]: value }));
-  res.status(201).json({ message: 'Item added successfully', newItem:  data});
+  res.status(201).json({ message: 'Item sent', newItem:  data});
     /* const dataArray = Object.entries(data).map(([key, value]) => ({ [key]: value }));
   res.status(201).json({ message: 'Item added successfully', newItem:  dataArray}); */
 });
@@ -246,13 +229,6 @@ console.log(newItemDetails);
   }
 });
 
-
-
-
-
-
-
-
 app.post('/api/product/delete', async (req, res) => {
   try {
     const { itemName, CATEGORY } = req.body;
@@ -282,11 +258,6 @@ app.post('/api/product/delete', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
-
-
-
 
 app.post('/api/product/edit', upload.single('IMAGE'), async (req, res) => {
   try {
@@ -323,8 +294,6 @@ app.post('/api/product/edit', upload.single('IMAGE'), async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 
 app.post('/api/special/new', upload.single('IMAGE'), async (req, res) => {
@@ -373,13 +342,6 @@ app.post('/api/special/new', upload.single('IMAGE'), async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
 app.post('/api/special/delete', async (req, res) => {
   try {
     const { itemName,CATEGORY } = req.body;
@@ -393,8 +355,6 @@ app.post('/api/special/delete', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 app.post('/api/special/edit', upload.single('IMAGE'), async (req, res) => {
   try {

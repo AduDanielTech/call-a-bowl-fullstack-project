@@ -57,6 +57,7 @@ function Menu() {
       }, []);
     }
     
+    console.log(jsonData);
     setCategories(getCategories(Object.values(jsonData.MENU))) 
   }, [jsonData]);
 
