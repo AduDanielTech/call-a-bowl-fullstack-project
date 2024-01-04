@@ -11,7 +11,8 @@ function AppProvider({ children }) {
   const [error, setError] = useState(null);
 
   
-   const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = 'https://call-a-bowl-fullstack-project.vercel.app';
+   /* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
   
   const updateLocalStorage = (data) => {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));

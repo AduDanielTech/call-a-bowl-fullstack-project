@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+/* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
+const backendUrl = 'https://call-a-bowl-fullstack-project.vercel.app';
 const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
     const navigate = useNavigate();
     const [response, setresponse] = useState('');

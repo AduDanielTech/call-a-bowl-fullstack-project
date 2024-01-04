@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
+const backendUrl = 'http://localhost:5000';
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
 /* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
 function AdminPage({ isAuthenticated ,token}) {
   const navigate = useNavigate();
