@@ -179,7 +179,7 @@ app.get('/api/protected', verifyToken, (req, res) => {
 
 
 
-app.get('/api/products', async (req, res) => {
+app.get('/api/products',  cors() , async (req, res) => {
   const data = {    
       "Landing_Page": await LandingRepo.getAll(),
       "MENU": await productsRepo.getAll(),
