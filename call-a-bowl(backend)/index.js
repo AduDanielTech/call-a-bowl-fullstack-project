@@ -42,7 +42,13 @@ const upload = multer({ storage: storage });
 
 
 
-app.use(cors())
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://call-a-bowl-fullstack-project-a6kp-client.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // JWT Secret (Use environment variables in production)
 const jwtSecret = process.env.JWT_SECRET; 
 
@@ -179,7 +185,7 @@ app.get('/api/protected', verifyToken, (req, res) => {
 
 
 
-app.get('/api/products',  cors() , async (req, res) => {
+app.get('/api/products', async (req, res) => {
   const data = {    
       "Landing_Page": await LandingRepo.getAll(),
       "MENU": await productsRepo.getAll(),
