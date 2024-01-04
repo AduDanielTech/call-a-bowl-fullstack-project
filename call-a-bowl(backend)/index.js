@@ -26,20 +26,7 @@ const landingPage = require('./repositories/landingPage');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Configure middleware
 
-// Allow requests from your frontend's origin during development
-const allowedOrigins = ['*'];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-}));
 app.use(bodyParser.json());
 
 
