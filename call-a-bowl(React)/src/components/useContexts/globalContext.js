@@ -46,23 +46,34 @@ function AppProvider({ children }) {
   };
 
   const fetchAndHandleErrors = async (url) => {
-    const response = await fetch(url, {
-      mode: 'no-cors'
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const contentType = response.headers.get('content-type');
-
-    if (contentType && contentType.includes('application/json')) {
-      const data = await response.json();
-      return data.newItem;
-    } else {
-      throw new Error('Response is not in JSON format');
+    try {
+      const response = await fetch(url, {
+        method: 'GET', // or 'POST', 'PUT', etc.
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers as needed
+        },
+        // mode: 'cors', // This is the default mode
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const contentType = response.headers.get('content-type');
+  
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        return data.newItem;
+      } else {
+        throw new Error('Response is not in JSON format');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
     }
   };
+  
 
   const fetchDataAndUpdateLocalStorage = async () => {
     try {
