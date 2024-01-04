@@ -52,9 +52,15 @@ const jwtSecret = process.env.JWT_SECRET;
 
 app.use(cors(
   {
-    origin:"https://call-a-bowl-fullstack-project-a6kp-client.vercel.app"
+    origin:(origin, callback) => callback(null, true),
+    credentials: true
   }
 ));
+/* app.use(cors(
+  {
+    origin:"https://call-a-bowl-fullstack-project-a6kp-client.vercel.app"
+  }
+)); */
 
 app.post('/api/register', async (req, res) => {
   const { username, password, code } = req.body;
