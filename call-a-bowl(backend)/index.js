@@ -28,7 +28,18 @@ const port = process.env.PORT || 5000;
 
 // Configure middleware
 
-app.use(cors());
+// Allow requests from your frontend's origin during development
+const allowedOrigins = ['*'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+}));
 app.use(corsMiddleware);
 app.use(bodyParser.json());
 
@@ -432,18 +443,7 @@ app.get('/api/logout', (req, res) => {
 
 
 
-// Allow requests from your frontend's origin during development
-const allowedOrigins = ['https://call-a-bowl-fullstack-project-a6kp-client.vercel.app','http://localhost:3000', 'https://call-a-bowl-fullstack-project.vercel.app'];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-}));
 
 
 
