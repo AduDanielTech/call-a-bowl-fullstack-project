@@ -13,7 +13,6 @@ require('dotenv').config();
 
 
 const productsRepo = require('./repositories/products')
-const allowCors = require('./allowCors')
 const products = require('./repositories/products');
 const internal = require('stream');
 const LandingRepo = require('./repositories/landingPage');
@@ -184,7 +183,7 @@ app.get('/api/protected', verifyToken, (req, res) => {
 
 
 
-app.get('/api/products', allowCors(async (req, res) => {
+app.get('/api/products', async (req, res) => {
   const data = {    
       "Landing_Page": await LandingRepo.getAll(),
       "MENU": await productsRepo.getAll(),
@@ -194,7 +193,7 @@ app.get('/api/products', allowCors(async (req, res) => {
   res.status(201).json({ message: 'Item added successfully', newItem:  data});
     /* const dataArray = Object.entries(data).map(([key, value]) => ({ [key]: value }));
   res.status(201).json({ message: 'Item added successfully', newItem:  dataArray}); */
-}));
+});
 
 
 tinify.key = process.env.TINIFY_API_KEY;
