@@ -42,7 +42,7 @@ const upload = multer({ storage: storage });
 
 
 
-app.use(corsMiddleware)
+app.use(cors())
 // JWT Secret (Use environment variables in production)
 const jwtSecret = process.env.JWT_SECRET; 
 
