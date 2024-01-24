@@ -1,12 +1,12 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // Updated import for bcryptjs
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const tinify = require('tinify');
+const compression = require('compression')
 const fs = require('fs');
-const corsMiddleware = require('./cors');
 require('dotenv').config();
 
 
@@ -17,6 +17,7 @@ const products = require('./repositories/products');
 const internal = require('stream');
 const LandingRepo = require('./repositories/landingPage');
 const UsersRepo = require('./repositories/users');
+
 const { log } = require('console');
 const landingPage = require('./repositories/landingPage');
 
@@ -26,6 +27,8 @@ const landingPage = require('./repositories/landingPage');
 const app = express();
 const port = process.env.PORT || 5000;
 
+
+app.use(compression());
 
 app.use(bodyParser.json());
 
@@ -61,6 +64,9 @@ app.use(cors(
     origin:"https://call-a-bowl-fullstack-project-a6kp-client.vercel.app"
   }
 )); */
+
+
+app.get('/', (req, res) => res.json("Server working......"))
 
 app.post('/api/register', async (req, res) => {
   const { username, password, code } = req.body;
@@ -144,6 +150,7 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/login', async (req, res) => {
   try {
+
     res.send('hi');
   } catch (error) {
     console.error(error);

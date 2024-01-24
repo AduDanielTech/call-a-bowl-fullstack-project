@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = 'https://backend.callabowl.com';
 const NewMenuItem = ({ isAuthenticated }) => {
   const [newMenuItem, setNewMenuItem] = useState({
     MENU: '',

@@ -15,7 +15,7 @@ function Home() {
   
 
 
-
+console.log(jsonData);
   const [specialOrder, setspecialOrder] = useState(jsonData.Landing_Page);
   const [menu, setMenu] = useState(Object.values(jsonData.MENU));
   const [searchinput, setSearchinput] = useState();
@@ -135,28 +135,28 @@ function Home() {
       <div className="landing_page_images" onClick={() => closeInput()}>
       <div className="tilt tilt1">
         <div className="tilt-background">
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra1.jpg)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra2.png)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra3.png)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra4.jpg)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra1.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra2.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra3.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/extra4.webp)' }}></div>
         </div>
         <a href="./menu#EXTRAS" className="tilt-text">Extras</a>
       </div>
       <div className="tilt middle_tilt">
         <div className="tilt-background tilt-middle">
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food1.avif)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food2.jpg)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food1.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food2.webp)' }}></div>
           <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food3.webp)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food4.png)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/food4.webp)' }}></div>
         </div>
         <a href="./menu" className="tilt-text">Food</a>
       </div>
       <div className="tilt tilt2">
         <div className="tilt-background">
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks1.jpg)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks2.png)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks3.jpg)' }}></div>
-          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks4.jpg)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks1.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks2.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks3.webp)' }}></div>
+          <div className="banner-img" style={{ backgroundImage: 'url(./images/image_change/drinks4.webp)' }}></div>
         </div>
         <a href="./menu#DRINKS" className="tilt-text">Drinks</a>
       </div>
@@ -167,35 +167,40 @@ function Home() {
         <a href="/menu#SOUP" className="quick_select_food">
 
           <div>
-            <img className="quick_select_food_ellipse" src="./images/Ellipse18.png" alt="pizza"/>
+            <img className="quick_select_food_ellipse" src="./images/Ellipse18.webp
+            " alt="pizza"/>
             
           </div>
           <p>Sea Food Okro</p>
         </a>
         <a href="/menu#RICE_MEALS" className="quick_select_food">
           <div>
-            <img className="quick_select_food_ellipse" src="./images/Ellipse17.png" alt="pizza"/>
+            <img className="quick_select_food_ellipse" src="./images/Ellipse17.webp
+            " alt="pizza"/>
             
           </div>
           <p>jollof rice</p>
         </a>
         <a href="/menu#PASTA_&_NOODLES" className="quick_select_food">
           <div>
-            <img className="quick_select_food_ellipse" src="./images/Ellipse19.png" alt="pizza"/>
+            <img className="quick_select_food_ellipse" src="./images/Ellipse19.webp
+            " alt="pizza"/>
             
           </div>
           <p>Noodles</p>
         </a>
         <a href="/menu#YAM_&_PLANTAIN" className="quick_select_food">
           <div>
-            <img className="quick_select_food_ellipse" src="./images/Ellipse20.png" alt="pizza"/>
+            <img className="quick_select_food_ellipse" src="./images/Ellipse20.webp
+            " alt="pizza"/>
             
           </div>
           <p>Yam porridge</p>
         </a>
         <a href="/menu#SOUP" className="quick_select_food">
           <div>
-            <img className="quick_select_food_ellipse" src="./images/Ellipse22.png" alt="pizza"/>
+            <img className="quick_select_food_ellipse" src="./images/Ellipse22.webp
+            " alt="pizza"/>
             
           </div>
           <p>Pounded yam</p>

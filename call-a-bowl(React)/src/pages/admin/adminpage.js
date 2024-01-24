@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-const backendUrl = 'http://localhost:5000';
+const backendUrl = 'https://backend.callabowl.com';
 
 /* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
 function AdminPage({ isAuthenticated ,token}) {
@@ -57,13 +57,14 @@ function AdminPage({ isAuthenticated ,token}) {
 
   const fetchData = async () => {
     try {
-      const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
+      localStorage.removeItem('jsonData');
+       //const cachedData = localStorage.getItem('jsonData'); Check if data is cached
       const response = await fetch(`${backendUrl}/api/products`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      if (cachedData && JSON.stringify(data.newItem) === cachedData) {
+     /*  if (cachedData && JSON.stringify(data.newItem) === cachedData) {
         // Data is the same as cached data, no need to update stat
         
 
@@ -79,7 +80,12 @@ function AdminPage({ isAuthenticated ,token}) {
         setJsonData(data.newItem);
         setIsLoading(false);
         console.log(data.newItem);
-      }
+      } */
+      //localStorage.setItem('jsonData', JSON.stringify(data.newItem));
+
+        
+      setJsonData(data.newItem);
+      setIsLoading(false);
     } catch (error) {
       
       setresponse(error)

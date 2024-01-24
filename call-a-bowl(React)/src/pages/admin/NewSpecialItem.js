@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = 'https://backend.callabowl.com';
 
 const NewSpecialItem = ({ isAuthenticated }) => {
   const [newMenuItem, setNewMenuItem] = useState({

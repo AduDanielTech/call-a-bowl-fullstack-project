@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 /* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
-const backendUrl = 'https://call-a-bowl-fullstack-project.vercel.app';
+const backendUrl = 'https://backend.callabowl.com';
 
 const Adminlayout = ({ children, setIsAuthenticated ,isAuthenticated, token, setToken }) => {
     const navigate = useNavigate();

@@ -1,59 +1,77 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 const AppContext = createContext();
-
 const CACHE_KEY = 'jsonData';
 
-function AppProvider({ children }) {
+
+
+
+
+
+const AppProvider = ({ children }) => {
   const [jsonData, setJsonData] = useState(null);
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const backendUrl = 'https://backend.callabowl.com';
+  /* const backendUrl = 'http://localhost:5000'; */
   
-  const backendUrl = 'https://call-a-bowl-fullstack-project.vercel.app';
-   /* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
-  
+
   const updateLocalStorage = (data) => {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
     localStorage.setItem('lastFetchTime', Date.now());
   };
-  
-  const fetchData = async () => {
+
+  const handleFetchResponse = async (response) => {
     try {
-      const response = await fetch(`${backendUrl}/api/products`);
-  
       if (!response.ok) {
-        console.log('Error: Fetch request not successful');
-        return;
+        throw new Error('Fetch request not successful');
       }
-  
+
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const { newItem } = await response.json();
         console.log('Fresh data:', newItem);
-  
         setJsonData(newItem);
-        updateLocalStorage(newItem);
+         updateLocalStorage(newItem);
       } else {
-        console.log('Error: Response is not in JSON format');
+        console.warn('Response is not JSON');
+        // Handle non-JSON responses if needed
+      }
+    } catch (error) {
+      console.error('Error handling response:', error);
+      // Handle errors gracefully, e.g., display user-friendly messages
+      setError(error.message);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      const lastFetchTime = localStorage.getItem('lastFetchTime');
+
+      if (cachedData && lastFetchTime && Date.now() - lastFetchTime < 120000) {
+        // Use cached data if it exists and the elapsed time is less than FETCH_INTERVAL
+        setJsonData(JSON.parse(cachedData));
+      } else {
+        const response = await fetch(`${backendUrl}/api/products`);
+      await handleFetchResponse(response);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
     }
   };
-  
+
   useEffect(() => {
     const fetchDataAndLog = async () => {
       await fetchData();
-      console.log('After fetching data');
       setIsLoading(false);
     };
-  
+
     fetchDataAndLog();
   }, []);
-  
 
   const memoizedJsonData = useMemo(() => jsonData, [jsonData]);
 
@@ -67,7 +85,7 @@ function AppProvider({ children }) {
       {children}
     </AppContext.Provider>
   );
-}
+};
 
 export { AppContext, AppProvider };
 /* 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = 'https://backend.callabowl.com';
 
 function Registration({ setIsAuthenticated, token, setToken }) {
   const [username, setUsername] = useState('');

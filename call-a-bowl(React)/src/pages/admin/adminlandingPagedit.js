@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-/* const backendUrl = process.env.REACT_APP_BACKEND_URL; */
-const backendUrl = 'https://call-a-bowl-fullstack-project.vercel.app';
+const backendUrl = 'https://backend.callabowl.com';
 const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
     const navigate = useNavigate();
     const [response, setresponse] = useState('');
@@ -38,13 +37,15 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
   
     const fetchData = async () => {
       try {
-        const cachedData = localStorage.getItem('jsonData'); // Check if data is cached
+        localStorage.removeItem('jsonData');
+        //const cachedData = localStorage.getItem('jsonData');  Check if data is cached
         const response = await fetch(`${backendUrl}/api/products`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        if (cachedData && JSON.stringify(data.newItem) === cachedData) {
+
+       /*  if (cachedData && JSON.stringify(data.newItem) === cachedData) {
           // Data is the same as cached data, no need to update stat
           
           setJsonData(JSON.parse(cachedData))
@@ -55,7 +56,9 @@ const AdminlandingPagedit = ({ isAuthenticated ,token}) => {
 
           setJsonData(data.newItem);
           setIsLoading(false);
-        }
+        } */
+        setJsonData(data.newItem);
+        setIsLoading(false);
       } catch (error) {
         setresponse(error)
         console.error('Error fetching menu data:', error);
